@@ -4,7 +4,7 @@ int playerOneButton = 2;
 int whiteLED = 9;
 
 // declare variables
-int delayTime = 5; // time delay between lights on/off
+int delayTime = 500; // time delay between lights on/off
 int randNumber;
 int whiteLEDOn; 
 int score = 0;
@@ -32,21 +32,21 @@ void loop() {
   if(whiteLEDOn==HIGH){
     digitalWrite(whiteLED, LOW);
   }
-  if (score >= 5) {
-      for (int i = 0; i < 10; i++) {
+  if (score >= 10) {
+      for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 3; j++) {
           digitalWrite(ledPin[j], HIGH); 
         }
         digitalWrite(whiteLED, HIGH);
         tone(8, 262);
-        delay(500);
+        delay(250);
         noTone(8);
         
         for (int j = 0; j < 3; j++) {
           digitalWrite(ledPin[j], LOW); 
         }
         digitalWrite(whiteLED, LOW);
-        delay(500);
+        delay(250);
       }
       score = 0;  
     }
@@ -61,4 +61,3 @@ void playerOneInput() {
     Serial.println(score, DEC); 
   }
 }
-
