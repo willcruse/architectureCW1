@@ -1,2 +1,2 @@
-# architecturecw0
+# Architecture Coursework
 
