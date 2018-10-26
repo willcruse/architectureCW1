@@ -1,10 +1,13 @@
-// assign LEDs and button to pins
+#include <Servo.h>
+
+// assign LEDs, buttons and servos to pins
 int ledPinPlayer1[] = {4,5,6};
 int ledPinPlayer2[] = {10, 11, 12};
 int playerOneButton = 2;
 int playerTwoButton = 3;
 int whiteLED = 9;
 int greenPlayerLED = 13;
+Servo player1Servo;
 
 // declare variables
 int delayTime = 500; // time delay between lights on/off
@@ -19,6 +22,8 @@ int scorePlayer2 = 0;
 void setup() {
   attachInterrupt(0, playerOneInput, FALLING); // specify interrupt routine
   attachInterrupt(1, playerTwoInput, FALLING);
+  player1Servo.attach(7);
+  player1Servo.write(0);
   for (int i=0; i<3; i++){
     pinMode(ledPinPlayer1[i], OUTPUT);
     pinMode(ledPinPlayer2[i], OUTPUT);
@@ -64,7 +69,7 @@ void loop() {
         digitalWrite(whiteLED, LOW);
         delay(250);
       }
-      scorePlayer1 = 0;
+      resetGame();
     }
     if (scorePlayer2 >= 10) {
         for (int i = 0; i < 5; i++) {
@@ -81,8 +86,8 @@ void loop() {
           digitalWrite(greenPlayerLED, LOW);
           delay(250);
         }
-        scorePlayer2 = 0;
-      }
+        resetGame();
+    }
 }
 
 
@@ -92,15 +97,27 @@ void playerOneInput() {
     scorePlayer1++;
     Serial.print("Player 1: ");
     Serial.println(scorePlayer1, DEC);
+    moveServo(scorePlayer1, player1Servo);
   }
 }
 
 
 void playerTwoInput() {
-  if (digitalRead(ledPinPlayer2[randNumber]) == HIGH) {
+  if (digitalRead(ledPinPlayer2[randNumber2]) == HIGH) {
     digitalWrite(greenPlayerLED, HIGH);
     scorePlayer2++;
     Serial.print("Player 2: ");
     Serial.println(scorePlayer2, DEC);
   }
+}
+
+void moveServo(int score, Servo servo) {
+  float pos = score * 18;
+  servo.write(pos);
+}
+
+void resetGame() {
+  scorePlayer1 = 0;
+  scorePlayer2 = 0;
+  player1Servo.write(0);
 }
