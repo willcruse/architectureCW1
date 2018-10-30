@@ -10,13 +10,14 @@ int greenPlayerLED = 13;
 Servo player1Servo;
 
 // declare variables
-int delayTime = 500; // time delay between lights on/off
 int randNumber;
 int randNumber2;
 int whiteLEDOn;
 int greenPlayerLEDOn;
 int scorePlayer1 = 0;
 int scorePlayer2 = 0;
+int resistorPin = A0;
+int sensorValue = 0;
 
 //setup interrupt, button input and LED outputs
 void setup() {
@@ -41,10 +42,10 @@ void loop() {
   randNumber2 = random(3);
   digitalWrite(ledPinPlayer1[randNumber], HIGH); // light the LED with this number
   digitalWrite(ledPinPlayer2[randNumber2], HIGH);
-  delay(delayTime);
+  delay(delayTime());
   digitalWrite(ledPinPlayer1[randNumber], LOW);
   digitalWrite(ledPinPlayer2[randNumber2], LOW);
-  delay(delayTime);
+  delay(delayTime());
   whiteLEDOn = digitalRead(whiteLED);
   greenPlayerLEDOn = digitalRead(greenPlayerLED);
   //if whiteLED on = turn it off
@@ -120,4 +121,27 @@ void resetGame() {
   scorePlayer1 = 0;
   scorePlayer2 = 0;
   player1Servo.write(0);
+}
+
+int delayTime(){
+    sensorValue = analogRead(resistorPin);
+  
+  if (sensorValue >=900){
+    return 100;
+  }
+  else if (sensorValue >=700){
+    return 300;
+  }
+  else if (sensorValue >= 500){
+    return 500;
+    }
+  else if (sensorValue >= 300){
+    return 700;
+  }
+  else if (sensorValue >= 100){
+    return 900;
+  }
+  else {
+    return 1000;
+  }
 }
