@@ -2,11 +2,13 @@
 
 // assign LEDs, buttons and servos to pins
 Servo player1Servo;
-int playerOneButton = 4;
-int playerTwoButton = 5;
-int data = 2;
-int clock = 3;
-int latch = 4;
+int playerOneButton = 2;
+int playerTwoButton = 3;
+int data = 10;
+int clock = 9;
+int latch = 8;
+int resistorPin = A0;
+int speakerPin = 13;
 
 // declare variables
 int valuesPlayer1[] = {1, 2, 4};
@@ -15,13 +17,13 @@ int playerRandoms[2];
 int shiftOutValue;
 int scorePlayer1 = 0;
 int scorePlayer2 = 0;
-int resistorPin = A0;
 int sensorValue = 0;
+int state = 1;
 
 //setup interrupt, button input and LED outputs
 void setup() {
-  attachInterrupt(0, playerOneInput, FALLING); // specify interrupt routine
-  attachInterrupt(1, playerTwoInput, FALLING);
+  attachInterrupt(digitalPinToInterrupt(2), playerOneInput, FALLING); // specify interrupt routine
+  attachInterrupt(digitalPinToInterrupt(3), playerTwoInput, FALLING);
   player1Servo.attach(7);
   player1Servo.write(0);
   pinMode(playerOneButton, INPUT);
@@ -34,25 +36,22 @@ void setup() {
 
 //run main program loop
 void loop() {
-  digitalWrite(latch, LOW);
-  shiftOut(data, clock, MSBFIRST, 0);
-  digitalWrite(latch, HIGH);
+  shiftWrite(0);
   for (int i = 0; i < 2; i++) {
     playerRandoms[i] = random(3);
   }
   shiftOutValue = valuesPlayer1[playerRandoms[0]] + valuesPlayer2[playerRandoms[1]];
-  digitalWrite(latch, LOW);
-  shiftOut(data, clock, MSBFIRST, shiftOutValue);
-  digitalWrite(latch, HIGH);
+  shiftWrite(shiftOutValue);
   delay(delayTime());
-  digitalWrite(latch, LOW);
-  shiftOut(data, clock, MSBFIRST, 0);
-  digitalWrite(latch, HIGH);
-  for (int i = 0; i < 2; i++) {
-    playerRandoms[i] = 0;
-  }
+  shiftWrite(0);
   delay(delayTime());
-  /**if (scorePlayer1 >= 10) {
+   /*
+    * 
+    * TODO: 
+    * Update to reflect shift register
+    * 
+    */
+  /*if (scorePlayer1 >= 10) {
       for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 3; j++) {
           digitalWrite(ledPinPlayer1[j], HIGH);
@@ -90,26 +89,24 @@ void loop() {
 
 
 void playerOneInput() {
-  if (playerRandoms[0]) {
-    digitalWrite(latch, LOW);
-    shiftOut(data, clock, MSBFIRST, 8);
-    digitalWrite(latch, HIGH);
+  if (state) {
+    shiftWrite(8);
     scorePlayer1++;
-    Serial.print("Player 1: ");
-    Serial.println(scorePlayer1, DEC);
     moveServo(scorePlayer1, player1Servo);
+    tone(speakerPin, 262, 250);
+  } else {
+    tone(speakerPin, 175, 250);
   }
 }
 
 
 void playerTwoInput() {
-  if (playerRandoms[1]) {
-    digitalWrite(latch, LOW);
-    shiftOut(data, clock, MSBFIRST, 128);
-    digitalWrite(latch, HIGH);
+  if (state) {
+    shiftWrite(128);
     scorePlayer2++;
-    Serial.print("Player 2: ");
-    Serial.println(scorePlayer2, DEC);
+    tone(speakerPin, 131, 250);
+  } else {
+    tone(speakerPin, 87, 250);
   }
 }
 
@@ -145,4 +142,11 @@ int delayTime(){
   else {
     return 1000;
   }
+}
+
+void shiftWrite(int value) {
+    digitalWrite(latch, LOW);
+    shiftOut(data, clock, MSBFIRST, value);
+    digitalWrite(latch, HIGH);
+    state = !state;
 }
