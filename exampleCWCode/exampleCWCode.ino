@@ -53,36 +53,22 @@ void loop() {
     */
   if (scorePlayer1 >= 10) {
       for (int i = 0; i < 5; i++) {
-        for (int j = 0; j < 3; j++) {
-          digitalWrite(ledPinPlayer1[j], HIGH);
-        }
-        digitalWrite(whiteLED, HIGH);
-        tone(8, 262);
+        shiftWrite(15);
+        tone(speakerPin, 262);
         delay(250);
-        noTone(8);
-        for (int j = 0; j < 3; j++) {
-          digitalWrite(ledPinPlayer1[j], LOW);
-        }
-        digitalWrite(whiteLED, LOW);
+        shiftWrite(0);
         delay(250);
       }
       resetGame();
     }
     if (scorePlayer2 >= 10) {
         for (int i = 0; i < 5; i++) {
-          for (int j = 0; j < 3; j++) {
-            digitalWrite(ledPinPlayer2[j], HIGH);
-          }
-          digitalWrite(greenPlayerLED, HIGH);
-          tone(8, 131);
+          shiftWrite(240);
+          tone(speakerPin, 262);
           delay(250);
-          noTone(8);
-          for (int j = 0; j < 3; j++) {
-            digitalWrite(ledPinPlayer2[j], LOW);
-          }
-          digitalWrite(greenPlayerLED, LOW);
+          shiftWrite(0);
           delay(250);
-        }
+      }
         resetGame();
     }
 }
