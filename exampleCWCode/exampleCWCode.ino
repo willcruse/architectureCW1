@@ -45,12 +45,6 @@ void loop() {
   delay(delayTime());
   shiftWrite(0);
   delay(delayTime());
-   /*
-    * 
-    * TODO: 
-    * Update to reflect shift register
-    * 
-    */
   if (scorePlayer1 >= 10) {
       for (int i = 0; i < 5; i++) {
         shiftWrite(15);
