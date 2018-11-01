@@ -96,37 +96,23 @@ void loop() {
   shiftWrite(0);
   digitalWrite(player3LED[playerRandoms[2]], LOW);
   delay(delayTime());
-  //Check to see if any player has won by having a score of 10 or more
-  if (scorePlayer1 >= 10) {
+  /*Check to see if any player has won by having a score of 10 or more
+   * if so flashes all LEDs
+   */
+  if (scorePlayer1 >= 10 || scorePlayer2 >= 10 || scorePlayer3 >= 10) {
       for (int i = 0; i < 5; i++) {
-        shiftWrite(15);
+        shiftWrite(255);
+        for (int i = 0; i < 4; i++) {
+          digitalWrite(player3LED[i], HIGH);
+        }
         delay(250);
         shiftWrite(0);
+        for (int i = 0; i < 4; i++) {
+          digitalWrite(player3LED[i], LOW);
+        }
         delay(250);
       }
       resetGame();
-    }
-    if (scorePlayer2 >= 10) {
-        for (int i = 0; i < 5; i++) {
-          shiftWrite(240);
-          delay(250);
-          shiftWrite(0);
-          delay(250);
-      }
-        resetGame();
-    }
-    if (scorePlayer3 >= 10) {
-      for (int i = 0; i < 5; i++) {
-        for (int j = 0; j < 4; j++) {
-          digitalWrite(player3LED[j], HIGH);
-        }
-        delay(250);
-        for (int j = 0; j < 4; j++) {
-          digitalWrite(player3LED[j], LOW);
-        }
-        delay(250);
-        resetGame();
-      }
     }
     if (scorePlayer1 > scorePlayer2 && scorePlayer1 > scorePlayer3) {
       servo.write(0);
