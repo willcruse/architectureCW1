@@ -25,9 +25,7 @@ int playerRandoms[3];
  * to the shift register
  */
 int shiftOutValue;
-int scorePlayer1 = 0;
-int scorePlayer2 = 0;
-int scorePlayer3 = 0;
+int scores[3] = {0, 0, 0}
 //Input from the potentiometer
 int sensorValue = 0;
 /*Used to check if LEDs are on or off
@@ -84,8 +82,8 @@ void loop() {
     //Check if playerThree has pushed a button
     if (digitalRead(playerThreeButton) == LOW && playerThreeFlag == 0) {
     Serial.print("Player 3 score: ");
-    Serial.println(scorePlayer3);
-      scorePlayer3++;
+    Serial.println(scores[2]);
+      scores[2] += 1;
       tone(speakerPin, 220, 250);
       digitalWrite(player3LED[3], HIGH);
       playerThreeFlag = 1;
@@ -100,7 +98,7 @@ void loop() {
   /*Check to see if any player has won by having a score of 10 or more
    * if so flashes all LEDs
    */
-  if (scorePlayer1 >= 10 || scorePlayer2 >= 10 || scorePlayer3 >= 10) {
+  if (scores[0] >= 10 || scores[1] >= 10 || scores[2] >= 10) {
       for (int i = 0; i < 5; i++) {
         shiftWrite(255);
         for (int i = 0; i < 4; i++) {
@@ -115,9 +113,9 @@ void loop() {
       }
       resetGame();
     }
-    if (scorePlayer1 > scorePlayer2 && scorePlayer1 > scorePlayer3) {
+    if (scores[0] > scores[1] && scores[2] > scores[2]) {
       servo.write(20);
-    } else if (scorePlayer2 > scorePlayer3) {
+    } else if (scores[1] > scores[2]) {
       servo.write(90);
     } else {
       servo.write(160);
@@ -128,10 +126,10 @@ void loop() {
 //ISR function called when playerOneButton is pressed
 void playerOneInput() {
   Serial.print("Player 1 score: ");
-  Serial.println(scorePlayer1);
+  Serial.println(scores[0]);
   if (state) {
     shiftWrite(8);
-    scorePlayer1++;
+    scores[0] += 1;
     tone(speakerPin, 262, 250);
   } else {
     tone(speakerPin, 165, 250);
@@ -141,10 +139,10 @@ void playerOneInput() {
 //ISR function called when playerTwoButton is pressed
 void playerTwoInput() {
   Serial.print("Player 2 score: ");
-  Serial.println(scorePlayer2);
+  Serial.println(scores[1]);
   if (state) {
     shiftWrite(128);
-    scorePlayer2++;
+    scores[1] += 1;
     tone(speakerPin, 247, 250);
   } else {
     tone(speakerPin, 147, 250);
@@ -153,9 +151,9 @@ void playerTwoInput() {
 
 //Sets scores to 0 and resets servos
 void resetGame() {
-  scorePlayer1 = 0;
-  scorePlayer2 = 0;
-  scorePlayer3 = 0;
+  for (int i = 0; i < 3; i++) {
+    scores[i] = 0;
+  }
   servo.write(0);
 }
 
