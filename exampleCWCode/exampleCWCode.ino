@@ -60,7 +60,6 @@ void setup() {
 //run main program loop
 void loop() {
   //Serial.println(digitalRead(playerThreeButton));
-  Serial.println(scorePlayer3);
   if (digitalRead(playerThreeButton) == LOW) {
     tone(speakerPin, 131, 250);
   }
@@ -84,6 +83,8 @@ void loop() {
   while (currentMS - previousMS < delayTime()) {
     //Check if playerThree has pushed a button
     if (digitalRead(playerThreeButton) == LOW && playerThreeFlag == 0) {
+    Serial.print("Player 3 score: ");
+    Serial.println(scorePlayer3);
       scorePlayer3++;
       tone(speakerPin, 220, 250);
       digitalWrite(player3LED[3], HIGH);
@@ -115,17 +116,19 @@ void loop() {
       resetGame();
     }
     if (scorePlayer1 > scorePlayer2 && scorePlayer1 > scorePlayer3) {
-      servo.write(0);
+      servo.write(20);
     } else if (scorePlayer2 > scorePlayer3) {
       servo.write(90);
     } else {
-      servo.write(180);
+      servo.write(160);
     }
 }
 
 
 //ISR function called when playerOneButton is pressed
 void playerOneInput() {
+  Serial.print("Player 1 score: ");
+  Serial.println(scorePlayer1);
   if (state) {
     shiftWrite(8);
     scorePlayer1++;
@@ -137,6 +140,8 @@ void playerOneInput() {
 
 //ISR function called when playerTwoButton is pressed
 void playerTwoInput() {
+  Serial.print("Player 2 score: ");
+  Serial.println(scorePlayer2);
   if (state) {
     shiftWrite(128);
     scorePlayer2++;
