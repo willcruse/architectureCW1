@@ -15,7 +15,7 @@ int player3LED[] = {4, 5, 6, 7};
 // declare variables
 /*
  * Values arrays correspond to the base 10 value of 
- * the LEDs position in the shift register
+ * the LEDs position in the shift register\
  */
 int valuesPlayer1[] = {1, 2, 4};
 int valuesPlayer2[] = {16, 32, 64};
